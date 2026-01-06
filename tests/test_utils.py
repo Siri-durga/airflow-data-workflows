@@ -3,7 +3,11 @@ from airflow.models import DagBag
 DAG_PATH = "dags"
 
 def test_all_dags_load():
-    dagbag = DagBag(dag_folder=DAG_PATH, include_examples=False)
+    dagbag = DagBag(
+        dag_folder=DAG_PATH,
+        include_examples=False,
+        read_dags_from_db=False
+    )
 
     expected_dags = {
         "csv_to_postgres_ingestion",
@@ -17,6 +21,6 @@ def test_all_dags_load():
     assert len(dagbag.import_errors) == 0
 
 def test_all_dag_ids_unique():
-    dagbag = DagBag(dag_folder=DAG_PATH, include_examples=False)
+    dagbag = DagBag(DAG_PATH, include_examples=False, read_dags_from_db=False)
     dag_ids = [dag.dag_id for dag in dagbag.dags.values()]
     assert len(dag_ids) == len(set(dag_ids))
